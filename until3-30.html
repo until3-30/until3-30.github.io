@@ -1,0 +1,79 @@
+<head>
+    <script>
+        function calculateTimeUntilNext330PM() {
+            // Create Date objects for the current time and 3:30 PM today
+            const currentTime = new Date();
+            const next330PM = new Date();
+
+            // Set the time to 3:30 PM
+            next330PM.setHours(15); // 3 PM
+            next330PM.setMinutes(30); // 30 minutes
+            next330PM.setSeconds(0); // 0 seconds
+            next330PM.setMilliseconds(0); // 0 milliseconds
+
+            // If it's already past 3:30 PM, set the time to 3:30 PM tomorrow
+            if (currentTime >= next330PM) {
+                next330PM.setDate(next330PM.getDate() + 1);
+            }
+
+            // Calculate the time difference in milliseconds
+            const timeDifference = next330PM - currentTime;
+
+            // Calculate hours, minutes, seconds, and milliseconds remaining
+            const hours = String(Math.floor(timeDifference / 3600000)).padStart(2, '0'); // 1 hour = 3600000 milliseconds
+            const minutes = String(Math.floor((timeDifference % 3600000) / 60000)).padStart(2, '0'); // 1 minute = 60000 milliseconds
+            const seconds = String(Math.floor((timeDifference % 60000) / 1000)).padStart(2, '0'); // 1 second = 1000 milliseconds
+            const milliseconds = String(timeDifference % 1000).padStart(3, '0');
+
+            return {
+                hours,
+                minutes,
+                seconds,
+            };
+        }
+
+        function updateCountdown() {
+            const timeRemaining = calculateTimeUntilNext330PM();
+            const countdownElement = document.getElementById('countdown');
+
+            countdownElement.textContent = `${timeRemaining.hours}:${timeRemaining.minutes}:${timeRemaining.seconds}`;
+        }
+
+        // Call updateCountdown every millisecond to update the countdown
+        setInterval(updateCountdown, 1);
+
+        document.addEventListener('click', () => {
+            if (document.fullscreenElement) {
+                // If already in fullscreen, exit fullscreen
+                document.exitFullscreen();
+            } else {
+                // If not in fullscreen, enter fullscreen
+                document.documentElement.requestFullscreen();
+            }
+        });
+
+    </script>
+    <style>
+        body {
+            font-family: "Open Sans";
+            text-align: center;
+            font-size: 75px;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+
+        span {
+            font-size: 150px;
+        }
+    </style>
+</head>
+
+<body>
+    <p>Until 3:30
+        <span id="countdown"></span>
+    </p>
+</body>
